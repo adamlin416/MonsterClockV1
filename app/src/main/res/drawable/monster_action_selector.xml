@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/button_selector.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 当按钮被按下时的样式 -->
+    <item android:drawable="@drawable/add_new_egg_shadow" android:state_pressed="true"/>
+    <!-- 默认样式 -->
+    <item android:drawable="@drawable/add_new_egg"/>
+</selector>

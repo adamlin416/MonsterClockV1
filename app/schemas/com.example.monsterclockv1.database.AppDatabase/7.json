@@ -1,0 +1,274 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 7,
+    "identityHash": "a96604c8a66b4b3bbe9ba46a829bb8c7",
+    "entities": [
+      {
+        "tableName": "monster",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`monsterId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `monsterName` TEXT NOT NULL, `monsterType` TEXT NOT NULL, `monsterLevel` INTEGER NOT NULL, `pixelGifName` TEXT NOT NULL, `pixelFocusedGifName` TEXT NOT NULL, `clockName` TEXT NOT NULL, `isDiscovered` INTEGER NOT NULL, `evolveSeconds` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "monsterId",
+            "columnName": "monsterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "monsterName",
+            "columnName": "monsterName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "monsterType",
+            "columnName": "monsterType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "monsterLevel",
+            "columnName": "monsterLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pixelGifName",
+            "columnName": "pixelGifName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pixelFocusedGifName",
+            "columnName": "pixelFocusedGifName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clockName",
+            "columnName": "clockName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDiscovered",
+            "columnName": "isDiscovered",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "evolveSeconds",
+            "columnName": "evolveSeconds",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "monsterId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "monster_serving",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`servingId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `monsterId` INTEGER NOT NULL, `position` INTEGER NOT NULL, `serveStartTime` INTEGER NOT NULL, `environment` TEXT NOT NULL, FOREIGN KEY(`monsterId`) REFERENCES `monster`(`monsterId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "servingId",
+            "columnName": "servingId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "monsterId",
+            "columnName": "monsterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serveStartTime",
+            "columnName": "serveStartTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "environment",
+            "columnName": "environment",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "servingId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_monster_serving_monsterId",
+            "unique": false,
+            "columnNames": [
+              "monsterId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_monster_serving_monsterId` ON `${TABLE_NAME}` (`monsterId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "monster",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "monsterId"
+            ],
+            "referencedColumns": [
+              "monsterId"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "evolution",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`evolutionId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `monsterId` INTEGER NOT NULL, `morningEvolutionId` INTEGER, `balanceEvolutionId` INTEGER, `nightEvolutionId` INTEGER, FOREIGN KEY(`monsterId`) REFERENCES `monster`(`monsterId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`morningEvolutionId`) REFERENCES `monster`(`monsterId`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`balanceEvolutionId`) REFERENCES `monster`(`monsterId`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`nightEvolutionId`) REFERENCES `monster`(`monsterId`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "evolutionId",
+            "columnName": "evolutionId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "monsterId",
+            "columnName": "monsterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "morningEvolutionId",
+            "columnName": "morningEvolutionId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "balanceEvolutionId",
+            "columnName": "balanceEvolutionId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nightEvolutionId",
+            "columnName": "nightEvolutionId",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "evolutionId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_evolution_monsterId",
+            "unique": false,
+            "columnNames": [
+              "monsterId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_evolution_monsterId` ON `${TABLE_NAME}` (`monsterId`)"
+          },
+          {
+            "name": "index_evolution_morningEvolutionId",
+            "unique": false,
+            "columnNames": [
+              "morningEvolutionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_evolution_morningEvolutionId` ON `${TABLE_NAME}` (`morningEvolutionId`)"
+          },
+          {
+            "name": "index_evolution_balanceEvolutionId",
+            "unique": false,
+            "columnNames": [
+              "balanceEvolutionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_evolution_balanceEvolutionId` ON `${TABLE_NAME}` (`balanceEvolutionId`)"
+          },
+          {
+            "name": "index_evolution_nightEvolutionId",
+            "unique": false,
+            "columnNames": [
+              "nightEvolutionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_evolution_nightEvolutionId` ON `${TABLE_NAME}` (`nightEvolutionId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "monster",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "monsterId"
+            ],
+            "referencedColumns": [
+              "monsterId"
+            ]
+          },
+          {
+            "table": "monster",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "morningEvolutionId"
+            ],
+            "referencedColumns": [
+              "monsterId"
+            ]
+          },
+          {
+            "table": "monster",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "balanceEvolutionId"
+            ],
+            "referencedColumns": [
+              "monsterId"
+            ]
+          },
+          {
+            "table": "monster",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "nightEvolutionId"
+            ],
+            "referencedColumns": [
+              "monsterId"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a96604c8a66b4b3bbe9ba46a829bb8c7')"
+    ]
+  }
+}

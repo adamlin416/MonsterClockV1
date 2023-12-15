@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">MonsterClockV1</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+
+    <!--Showing hints-->
+    <string name="apply_widget_button">Apply Monster Clock</string>
+    <string name="adapt_new_egg">Adapt new monster egg</string>
+
+    <!--Monster full name-->
+    <string name="morning_egg_name">Morning Egg</string>
+    <string name="balance_egg_name">Balance Egg</string>
+    <string name="night_egg_name">Night Egg</string>
+    <string name="seedy">Seedy</string>
+    <string name="nepenthes">Nepenthes</string>
+</resources>

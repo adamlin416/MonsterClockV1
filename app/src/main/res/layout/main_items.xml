@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/monsterClockLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/gifImageView"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_weight="2"
+        android:padding="10dp"
+        android:contentDescription="\@string/gif_description"
+        android:src="@drawable/monster_morning_egg"
+        android:background="@drawable/border_style"
+        />
+
+    <LinearLayout
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:padding="6dp"
+        android:background="@drawable/border_style">
+
+        <ImageView
+            android:id="@+id/actionApplyClockButton"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/action_apply_clock_selector"
+            android:background="@drawable/border_style"/>
+
+        <ImageView
+            android:id="@+id/actionDismissMonsterButton"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/action_restart_to_egg_selector"
+            android:background="@drawable/border_style"/>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>
+    <ImageView
+        android:id="@+id/showTypeImageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/border_style"
+        android:padding="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="\@string/gif_description"
+        android:src="@drawable/type_morning_gif" />
+
+    <TextView
+        android:id="@+id/countdownTimerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="105dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/font_regular_pixel_numbers"
+        android:text="00:00:00"
+        android:textSize="30dp"/>
+
+</RelativeLayout>

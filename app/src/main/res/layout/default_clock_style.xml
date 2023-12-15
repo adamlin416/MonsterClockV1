@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_default_clock_style"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/hour_first_digit"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/icons8_number_48"
+        android:layout_marginStart="-18dp"
+        android:layout_marginEnd="-18dp"
+        />
+
+    <ImageView
+        android:id="@+id/hour_second_digit"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/icons8_number_48"
+        android:layout_marginStart="-18dp"
+        android:layout_marginEnd="-18dp"
+        />
+
+    <ImageView
+        android:id="@+id/colon"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.7"
+        android:src="@drawable/icons8_colon_100"
+        android:layout_marginStart="-18dp"
+        android:layout_marginEnd="-18dp"
+        />
+
+    <ImageView
+        android:id="@+id/minute_first_digit"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/icons8_number_48"
+        android:layout_marginStart="-18dp"
+        android:layout_marginEnd="-18dp"
+        />
+
+    <ImageView
+        android:id="@+id/minute_second_digit"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/icons8_number_48"
+        android:layout_marginStart="-18dp"
+        android:layout_marginEnd="-18dp"
+        />
+</LinearLayout>
