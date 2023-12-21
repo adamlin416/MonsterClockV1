@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Color.argb
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -45,10 +46,16 @@ import org.threeten.bp.Instant
 import java.io.Serializable
 
 
-class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionListener {
+var testDeleteDB = true
+var testFirstLaunch = true
+// check if web is ok, check if zeczec user give code
+var qualifiedUser = false
+
+class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionListener, PayToUnlockHatcherDialogFragment.ChoosePayListener {
     private lateinit var recyclerView: RecyclerView
     private lateinit var addButton: ImageView
-    private val monsters = mutableListOf<Monster>() // List of GIF URLs
+    private lateinit var monsterIndexButton :ImageView
+    private val monsterServingList = mutableListOf<MonsterServing>() // List of GIF URLs
     private val evolutions = mutableListOf<Evolution>()
     private lateinit var db: AppDatabase
     private lateinit var gifAdapter: GifAdapter
@@ -57,19 +64,28 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
     private var addButtonSpotlight: Spotlight? = null
     private var needSpotlightOnSetClock: Boolean = false
 
-    // BUG to be fix: 當按下夜晚型態的蛋時，第一個變成驚嘆號之後，再點出新的蛋 會馬上變成驚嘆號
-
     companion object {
         const val ACTION_CHANGE_MONSTER = "com.example.monsterclockv1.CHANGE_MONSTER"
         const val CHANGE_MONSTER_ID = "com.example.monsterclockv1.CHANGE_MONSTER_ID"
         var setClockButtonSpotlight: Spotlight? = null
+        fun sendChangeMonsterBroadcast(monsterId: Int, context: Context) {
+            Log.d("MainActivity", "Sending broadcast to change monster: $monsterId")
+            val intent = Intent(context, ClockWidget::class.java).apply {
+                action = ACTION_CHANGE_MONSTER
+                putExtra(CHANGE_MONSTER_ID, monsterId)
+            }
+            context.sendBroadcast(intent)
+            Log.d("Companion", "CHANGE_MONSTER_ID Broadcast sent")
+        }
     }
 
-    private fun setNewMonsterTags(monster: Monster, type: MonsterType) {
-        monster.servingType = type
-        monster.needNewTimer = true
-        monster.evolveRemainingSeconds = monster.evolveSeconds!!
-        setMonsterDiscovered(monster.monsterId)
+    private fun attachNewMonsterServingTags(monsterServing: MonsterServing, monster: Monster) {
+        monsterServing.needNewTimer = true
+        monsterServing.pixelGifName = monster.pixelGifName
+        monsterServing.monsterType = monster.monsterType
+        monsterServing.evolveSeconds = monster.evolveSeconds
+        monsterServing.evolveRemainingSeconds = monster.evolveSeconds
+        setMonsterDiscovered(monsterServing.monsterId)
     }
 
     private fun setMonsterDiscovered(monsterId:Int) {
@@ -80,19 +96,28 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
 
     override fun onEggSelected(monster: Monster, evolution: Evolution) {
         Thread {
-            addNewEggToService(monster)
+            addNewEggToService(monster, evolution)
         }.start()
-        runOnUiThread {
-            //monster.servingType = monster.monsterType
-            setNewMonsterTags(monster, monster.monsterType)
-            monsters.add(monster)
-            evolutions.add(evolution)
-            gifAdapter.notifyItemInserted(monsters.size - 1)
-            if (monsters.size == 1) {  // also need to check isFirstLaunch
-                needSpotlightOnSetClock = true
-                println("needSpotlightOnSetClock set to true: $needSpotlightOnSetClock")
-            }
-        }
+    }
+
+    override fun onPaySelected() {
+        // TODO: Lead to IPA
+        qualifiedUser = true
+        println("IPA qualifiedUser: $qualifiedUser")
+        // go to select egg dialog
+        val dialog = EggSelectDialogFragment()
+        dialog.listener = this
+        dialog.show(supportFragmentManager, "EggSelectDialogFragment")
+    }
+
+    override fun onWatchAdSelected() {
+        // TODO: Lead to Ad
+        qualifiedUser = false
+        println("Watch Ad qualifiedUser: $qualifiedUser")
+        // go to select egg dialog
+        val dialog = EggSelectDialogFragment()
+        dialog.listener = this
+        dialog.show(supportFragmentManager, "EggSelectDialogFragment")
     }
 
     private fun onMonsterEvolve(position: Int, nextEnvironment: MonsterType) {
@@ -111,18 +136,19 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
             val newMonster = db.monsterDao().getMonsterById(newMonsterId)
             println("newMonsterId: $newMonsterId")
             // update new monsterServing
+            val newServing = MonsterServing(
+                servingId = servingMonster.servingId,
+                monsterId = newMonsterId!!,
+                serveStartTime = Instant.now(),
+                position = position,
+                environment = nextEnvironment
+            )
             db.monsterServingDao().updateMonsterServing(
-                MonsterServing(
-                    servingId = servingMonster.servingId,
-                    monsterId = newMonsterId!!,
-                    serveStartTime = Instant.now(),
-                    position = position,
-                    environment = nextEnvironment
-                )
+                newServing
             )
             // update monsters and evolutions
-            setNewMonsterTags(newMonster, nextEnvironment)
-            monsters[position] = newMonster
+            attachNewMonsterServingTags(newServing, newMonster)
+            monsterServingList[position] = newServing
             evolutions[position] = newEvolution
             runOnUiThread {
                 gifAdapter.notifyItemChanged(position)
@@ -135,10 +161,11 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
         // if yes, then check if it is time to evolve
         // if yes, then evolve
         // if no, then do nothing
-        monsters.forEach {
+        monsterServingList.forEach {
             val monsterId = it.monsterId
-            val position = monsters.indexOf(it)
+            val position = monsterServingList.indexOf(it)
             val allServingMonsters = db.monsterServingDao().getAllServingsMonsterSorted()
+            println("allServingMonsters: $allServingMonsters")
             val servingMonster = db.monsterServingDao().getMonsterServingByPosition(position)
             val evolution = db.evolutionDao().getEvolutionByMonsterId(monsterId)
             val possibleEvolutions: Map<String,Int?> = mapOf(
@@ -192,45 +219,47 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
         }
     }
 
-    fun openEvolutionActivity(evolutionList: List<Int?>, position: Int = 0) {
+    fun openEvolutionActivity(evolution: Evolution, position: Int = 0) {
         val intent = Intent(this, EvolutionActivity::class.java)
-        intent.putExtra("EVOLUTION_LIST", evolutionList as Serializable)
+        intent.putExtra("SERVING_MONSTER", monsterServingList[position] as Parcelable)
+        intent.putExtra("EVOLUTION", evolution as Parcelable)
         intent.putExtra("POSITION", position)
         evolutionResultLauncher.launch(intent)
     }
 
-    private fun addNewMonsterToService(monster: Monster, position: Int, environment: MonsterType) {
-        db.monsterServingDao().insertMonsterServing(
-            MonsterServing(
-                monsterId = monster.monsterId,
-                serveStartTime = Instant.now(),
-                environment = environment,
-                position = position
-            )
-        )
-    }
-
-    private fun addNewEggToService(monster: Monster) {
+    private fun addNewEggToService(monster: Monster, evolution: Evolution) {
         val allServingMonsters = db.monsterServingDao().getAllServingsMonster()
-        db.monsterServingDao().insertMonsterServing(
-            MonsterServing(
-                monsterId = monster.monsterId,
-                serveStartTime = Instant.now(),
-                environment = monster.monsterType,
-                position = allServingMonsters.size
-            )
+        val newServing = MonsterServing(
+            monsterId = monster.monsterId,
+            serveStartTime = Instant.now(),
+            environment = monster.monsterType,
+            position = allServingMonsters.size
         )
+        db.monsterServingDao().insertMonsterServing(
+            newServing
+        )
+        runOnUiThread {
+            //monster.servingType = monster.monsterType
+            attachNewMonsterServingTags(newServing, monster)
+            monsterServingList.add(newServing)
+            evolutions.add(evolution)
+            gifAdapter.notifyItemInserted(monsterServingList.size - 1)
+            if (monsterServingList.size == 1 && firstLaunch) {  // also need to check isFirstLaunch
+                needSpotlightOnSetClock = true
+                println("needSpotlightOnSetClock set to true: $needSpotlightOnSetClock")
+            }
+        }
     }
 
     private fun showAddButtonGuidance() {
         val addButton = findViewById<ImageView>(R.id.addButton) // 确保这里是正确的 ID
         addButton.post {
-            addButtonSpotlight = buildSpotlightForButton(addButton)
+            addButtonSpotlight = buildSpotlightForButton(addButton, R.layout.guide_add_egg_overlay)
             addButtonSpotlight!!.start() // 启动 Spotlight
         }
     }
 
-    private fun buildSpotlightForButton(button: ImageView): Spotlight {
+    private fun buildSpotlightForButton(button: ImageView, layout:Int): Spotlight {
         val location = IntArray(2)
         button.getLocationInWindow(location)
         val x = location[0] + button.width / 2f
@@ -248,16 +277,14 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
                 cornerRadius
             ))
             .setEffect(RippleEffect(100f, 200f, argb(255, 255, 255, 255))) // 简单的 Ripple 效果
-            .setOverlay(layoutInflater.inflate(R.layout.simple_overlay, null))
+            .setOverlay(layoutInflater.inflate(layout, null))
             .setOnTargetListener(object : OnTargetListener {
                 override fun onStarted() {
                     Log.d("MainActivity", "Simple target is started")
-                    Toast.makeText(this@MainActivity, "Simple target is started", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onEnded() {
                     Log.d("MainActivity", "Simple target is ended")
-                    Toast.makeText(this@MainActivity, "Simple target is ended", Toast.LENGTH_SHORT).show()
                 }
             })
             .build()
@@ -271,12 +298,15 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
             .setOnSpotlightListener(object : OnSpotlightListener {
                 override fun onStarted() {
                     Log.d("MainActivity", "Simple Spotlight is started")
-                    Toast.makeText(this@MainActivity, "Simple Spotlight is started", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onEnded() {
                     Log.d("MainActivity", "Simple Spotlight is ended")
-                    Toast.makeText(this@MainActivity, "Simple Spotlight is ended", Toast.LENGTH_SHORT).show()
+                    if (layout == R.layout.guide_set_clock_overlay) {
+                        val intent = Intent(this@MainActivity, GuideSetWidgetActivity::class.java)
+                        this@MainActivity.startActivity(intent)
+                        firstLaunch = false
+                    }
                 }
             })
             .build()
@@ -289,7 +319,7 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
             firstItemView?.let { view ->
                 // 假设您要聚焦的按钮的 ID 为 R.id.your_button_id
                 val targetButton = view.findViewById<ImageView>(R.id.actionApplyClockButton)
-                setClockButtonSpotlight = buildSpotlightForButton(targetButton)
+                setClockButtonSpotlight = buildSpotlightForButton(targetButton, R.layout.guide_set_clock_overlay)
                 setClockButtonSpotlight!!.start()
             }
         }
@@ -305,11 +335,15 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
         firstLaunch = sharedPref.getBoolean("IsFirstTimeLaunch", true)
 
-        //if (BuildConfig.DEBUG) {
-        //    // 清空資料庫或重置 SharedPreferences
-        //    DatabaseProvider.clearDatabase(this)
-        //    showAddButtonGuidance()
-        //}
+        if (BuildConfig.DEBUG && testDeleteDB) {
+            // 清空資料庫或重置 SharedPreferences
+            DatabaseProvider.clearDatabase(this)
+            testDeleteDB = false
+        }
+        if (BuildConfig.DEBUG && testFirstLaunch) {
+            firstLaunch = true
+            testFirstLaunch = false
+        }
 
         // set guidance at first time launch
         if (firstLaunch) {
@@ -323,6 +357,7 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         addButton = findViewById(R.id.addButton)
+        monsterIndexButton = findViewById(R.id.indexButton)
 
         // prepare evolution launcher
         evolutionActivityLauncher()
@@ -332,67 +367,67 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
             var monsterServings = withContext(Dispatchers.IO) {
                 db.monsterServingDao().getAllServingsMonster()
             }
-            var monsters = withContext(Dispatchers.IO) {
-                monsterServings.map {
-                    db.monsterDao().getMonsterById(it.monsterId)
-                }
-            }
-            println("servingMonsters: $monsters")
 
             // for testing
             // if length of servingMonsters is >3, then only keep the oldest 3
-            if (monsters.size > 3) {
-                val monstersSorted = monsters.sortedBy { it.monsterId }
-                val monstersSortedKeep = monstersSorted.subList(monstersSorted.size - 3, monstersSorted.size)
+            if (monsterServings.size > 3) {
                 val monsterServingsSorted = monsterServings.sortedBy { it.servingId }
                 val monsterServingsSortedKeep = monsterServingsSorted.subList(monsterServingsSorted.size - 3, monsterServingsSorted.size)
 
-                println("monstersSortedKeep: $monstersSortedKeep")
                 // delete all serving monsters
                 withContext(Dispatchers.IO) {
                     db.monsterServingDao().deleteAll()
                 }
                 // add serving monsters back
                 Thread {
-                    for (i in monstersSortedKeep.indices) {
-                        addNewMonsterToService(monstersSortedKeep[i], i, monsterServingsSortedKeep[i].environment!!)
-                    }
+                    db.monsterServingDao().insertMonsterServings(monsterServingsSortedKeep)
                 }.start()
-                monsters = monstersSortedKeep
                 monsterServings = monsterServingsSortedKeep
             }
 
             // recover monsters tags
-            for (i in monsters.indices) {
+            for (i in monsterServings.indices) {
                 // count remaining seconds to continue countdown
                 val timeDiffer = Instant.now().epochSecond - monsterServings[i].serveStartTime.epochSecond
-                val remainingSeconds = monsters[i].evolveSeconds - timeDiffer
-                monsters[i].evolveRemainingSeconds = remainingSeconds.toInt()
+                val remainingSeconds = monsterServings[i].evolveSeconds - timeDiffer
+                monsterServings[i].evolveRemainingSeconds = remainingSeconds.toInt()
                 // set environment
-                monsters[i].servingType = monsterServings[i].environment!!
                 // get evolution
                 val evolution = withContext(Dispatchers.IO) {
-                    db.evolutionDao().getEvolutionByMonsterId(monsters[i].monsterId)
+                    db.evolutionDao().getEvolutionByMonsterId(monsterServings[i].monsterId)
                 }
                 evolutions.add(evolution!!)
             }
-            // add to monsters
-            for (monster in monsters) {
-
-                this@MainActivity.monsters.add(monster)
-            }
+            // add to monstersServingList
+            this@MainActivity.monsterServingList.addAll(monsterServings)
             // check if any monster reaches evolution time
             startPeriodicCheck()
-            gifAdapter = GifAdapter(this@MainActivity.monsters, this@MainActivity, evolutions)
+            gifAdapter = GifAdapter(this@MainActivity.monsterServingList, this@MainActivity, evolutions)
             recyclerView.adapter = gifAdapter
         }
 
         // set add button
         addButton.setOnClickListener {
-            addButtonSpotlight?.finish()
-            val dialog = EggSelectDialogFragment()
-            dialog.listener = this
-            dialog.show(supportFragmentManager, "EggSelectDialogFragment")
+            if (addButtonSpotlight != null) {
+                addButtonSpotlight?.finish()
+                addButtonSpotlight = null
+            }
+            if (qualifiedUser || monsterServingList.size < 1) {
+                val dialog = EggSelectDialogFragment()
+                dialog.listener = this
+                dialog.show(supportFragmentManager, "EggSelectDialogFragment")
+            } else {
+                // show warning to IPA to unlock new column
+                val dialog = PayToUnlockHatcherDialogFragment()
+                dialog.listener = this
+                dialog.show(supportFragmentManager, "PayToUnlockHatcherDialogFragment")
+            }
+        }
+
+        //set index button
+        monsterIndexButton.setOnClickListener {
+            val intent = Intent(this, MonsterIndexActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -400,7 +435,7 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
         super.onResume()
     }
 
-    class GifAdapter(private val monsters: List<Monster>, private val context: Context, private var evolutions: List<Evolution>) :
+    class GifAdapter(private val monsterServingList: List<MonsterServing>, private val context: Context, private var evolutions: List<Evolution>) :
         RecyclerView.Adapter<GifAdapter.GifViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GifViewHolder {
@@ -409,10 +444,10 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
         }
 
         override fun onBindViewHolder(holder: GifViewHolder, position: Int) {
-            holder.bind(monsters[position], position, evolutions[position])
+            holder.bind(monsterServingList[position], position, evolutions[position])
         }
 
-        override fun getItemCount(): Int = monsters.size
+        override fun getItemCount(): Int = monsterServingList.size
 
         class GifViewHolder(itemView: View, private val context: Context) :
             RecyclerView.ViewHolder(itemView) {
@@ -423,19 +458,9 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
             private var countdownTimerTextView: TextView = itemView.findViewById(R.id.countdownTimerTextView)
             private var countdownTimer: CountDownTimer? = null
 
-            private fun sendChangeMonsterBroadcast(monsterId: Int) {
-                Log.d("MainActivity", "Sending broadcast to change monster: $monsterId")
-                val intent = Intent(context, ClockWidget::class.java).apply {
-                    action = ACTION_CHANGE_MONSTER
-                    putExtra(CHANGE_MONSTER_ID, monsterId)
-                }
-                context.sendBroadcast(intent)
-                Log.d("MainActivity", "CHANGE_MONSTER_ID Broadcast sent")
-            }
-
-            fun bind(monster: Monster, position:Int, evolution: Evolution) {
+            fun bind(monsterServing: MonsterServing, position:Int, evolution: Evolution) {
                 val context = itemView.context
-                val resourceId = context.resources.getIdentifier(monster.pixelGifName, "drawable", context.packageName)
+                val resourceId = context.resources.getIdentifier(monsterServing.pixelGifName, "drawable", context.packageName)
 
                 // show monster gif
                 Glide.with(itemView.context)
@@ -443,7 +468,7 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
                     .load(resourceId)
                     .into(gifImageView)
                 // show showType and background
-                when (monster.servingType) {
+                when (monsterServing.environment) {
                     MonsterType.MORNING -> {
                         Glide.with(itemView.context)
                             .asGif()
@@ -467,7 +492,7 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
                     }
                 }
                 // show evolve warning if needed
-                if (monster.needEvolve) {
+                if (monsterServing.needEvolve) {
                     Glide.with(itemView.context)
                         .asGif()
                         .load(R.drawable.evolution_exclaimation)
@@ -476,27 +501,26 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
 
                 // set onClickListener for gifImageView
                 gifImageView.setOnClickListener {
-                    if (!monster.needEvolve) {
+                    if (!monsterServing.needEvolve) {
                         val intent = Intent(context, GifDetailActivity::class.java)
-                        val resourceId = context.resources.getIdentifier(monster.pixelFocusedGifName, "drawable", context.packageName)
-                        intent.putExtra("FOCUSED_GIF_RESOURCE_ID", resourceId)
+                        val resourceId = context.resources.getIdentifier(monsterServing.pixelGifName, "drawable", context.packageName)
+                        intent.putExtra("GIF_RESOURCE_ID", resourceId)
+                        intent.putExtra("MONSTER_ID", monsterServing.monsterId)
                         context.startActivity(intent)
                     } else {
-                        // put Map<String,Int> to intent info
-                        val evolutionList: List<Int?> = listOf(
-                            evolution.morningEvolutionId,
-                            evolution.balanceEvolutionId,
-                            evolution.nightEvolutionId
-                        )
-                        println("evolutionMap: $evolutionList")
-                        (context as MainActivity).openEvolutionActivity(evolutionList, position)
+                        (context as MainActivity).openEvolutionActivity(evolution, position)
                     }
                 }
 
                 // set onClickListener for setClockButton
                 setClockButton.setOnClickListener {
-                    sendChangeMonsterBroadcast(monster.monsterId)
-                    setClockButtonSpotlight?.finish()
+                    sendChangeMonsterBroadcast(monsterServing.monsterId, context)
+                    // pop warning
+                    Toast.makeText(context, "Monster clock has set to this monster's style.", Toast.LENGTH_SHORT).show()
+                    if (setClockButtonSpotlight != null) {
+                        setClockButtonSpotlight?.finish()
+                        setClockButtonSpotlight = null
+                    }
                 }
 
                 // set onClickListener for removeButton
@@ -524,7 +548,7 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
                             }
                         }.start()
                         // remove monster from monsters
-                        (context as MainActivity).monsters.removeAt(position)
+                        (context as MainActivity).monsterServingList.removeAt(position)
                         context.evolutions.removeAt(position)
                         // notify adapter
                         context.runOnUiThread {
@@ -536,42 +560,18 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
                     }
                     val dialog: AlertDialog = builder.create()
                     dialog.show()
-                    //// remove monster from database
-                    //Thread {
-                    //    (context as MainActivity).db.monsterServingDao().deleteMonsterServingByPosition(position)
-                    //    // change remaining monsters' position
-                    //    val remainingMonsters = context.db.monsterServingDao().getAllServingsMonsterSorted()
-                    //    for (i in position until remainingMonsters.size) {
-                    //        context.db.monsterServingDao().updateMonsterServing(
-                    //            MonsterServing(
-                    //                servingId = remainingMonsters[i].servingId,
-                    //                monsterId = remainingMonsters[i].monsterId,
-                    //                serveStartTime = remainingMonsters[i].serveStartTime,
-                    //                environment = remainingMonsters[i].environment,
-                    //                position = i
-                    //            )
-                    //        )
-                    //    }
-                    //}.start()
-                    //// remove monster from monsters
-                    //(context as MainActivity).monsters.removeAt(position)
-                    //context.evolutions.removeAt(position)
-                    //// notify adapter
-                    //context.runOnUiThread {
-                    //    context.gifAdapter.notifyItemRemoved(position)
-                    //}
                 }
 
 
                 // set count down timer
-                if (monster.needNewTimer) {
-                    println("monster.needsTimerUpdate: ${monster.needNewTimer}")
+                if (monsterServing.needNewTimer) {
+                    println("monster.needsTimerUpdate: ${monsterServing.needNewTimer}")
                     countdownTimer?.cancel()
                     countdownTimer = null
-                    monster.needNewTimer = false
+                    monsterServing.needNewTimer = false
                 }
                 if (countdownTimer == null) {
-                    countdownTimer = object : CountDownTimer(monster.evolveRemainingSeconds.toLong()*1000, 1000) {
+                    countdownTimer = object : CountDownTimer(monsterServing.evolveRemainingSeconds.toLong()*1000, 1000) {
                         override fun onTick(millisUntilFinished: Long) {
                             // 更新 TextView 的文本
                             val remainSeconds = (millisUntilFinished / 1000).toInt()
@@ -579,7 +579,7 @@ class MainActivity : AppCompatActivity(), EggSelectDialogFragment.GifSelectionLi
                             val minutes = (remainSeconds / 60) % 60
                             val seconds = remainSeconds % 60
                             countdownTimerTextView.text = String.format("%02d:%02d:%02d", hours, minutes, seconds)
-                            if (monster.servingType == MonsterType.NIGHT) {
+                            if (monsterServing.environment == MonsterType.NIGHT) {
                                 countdownTimerTextView.setTextColor(Color.argb(255, 255, 255, 255))
                             }
                             println("countdownTimerTextView.text: ${countdownTimerTextView.text}")

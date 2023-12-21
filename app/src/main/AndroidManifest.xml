@@ -42,6 +42,12 @@
         <activity android:name=".EvolutionActivity"
             android:exported="false"/>
 
+        <activity android:name=".GuideSetWidgetActivity"
+            android:exported="false"/>
+
+        <activity android:name=".MonsterIndexActivity"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

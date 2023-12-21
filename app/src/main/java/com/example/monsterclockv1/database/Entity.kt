@@ -1,10 +1,12 @@
 package com.example.monsterclockv1.database
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.monsterclockv1.enums.MonsterType
+import kotlinx.parcelize.Parcelize
 import org.threeten.bp.Instant
 
 @Entity(tableName = "monster")
@@ -19,53 +21,10 @@ data class Monster(
     val clockName: String,
     val isDiscovered: Boolean = false,
     val evolveSeconds: Int,
-    //@Ignore
-    //var needNewTimer: Boolean = false,
-    //@Ignore
-    //var needEvolve: Boolean = false,
-    //@Ignore
-    //var servingType: MonsterType = MonsterType.MORNING,
-    //@Ignore
-    //var evolveRemainingSeconds: Int = 0
-) {
-    @Ignore
-    var needNewTimer: Boolean = false
-    @Ignore
-    var needEvolve: Boolean = false
-    @Ignore
-    var servingType: MonsterType = MonsterType.MORNING
-    @Ignore
-    var evolveRemainingSeconds: Int = 0
-}
-//{
-//    // 显式定义构造函数，仅包含数据库中的字段
-//    constructor(
-//        monsterId: Int,
-//        monsterName: String,
-//        monsterType: MonsterType,
-//        monsterLevel: Int,
-//        pixelGifName: String,
-//        pixelFocusedGifName: String,
-//        clockName: String,
-//        isDiscovered: Boolean,
-//        evolveSeconds: Int
-//    ) : this(
-//        monsterId,
-//        monsterName,
-//        monsterType,
-//        monsterLevel,
-//        pixelGifName,
-//        pixelFocusedGifName,
-//        clockName,
-//        isDiscovered,
-//        evolveSeconds,
-//        false,
-//        false,
-//        MonsterType.MORNING,
-//        0// 为 @Ignore 字段设置默认值
-//    )
-//}
+    val story: String,
+)
 
+@Parcelize
 @Entity(
     tableName = "monster_serving",
     foreignKeys = [
@@ -85,8 +44,22 @@ data class MonsterServing(
     val position: Int = 0,
     val serveStartTime: Instant,
     val environment: MonsterType,
-)
+): Parcelable {
+    @Ignore
+    var needNewTimer: Boolean = false
+    @Ignore
+    var needEvolve: Boolean = false
+    @Ignore
+    var evolveRemainingSeconds: Int = 0
+    @Ignore
+    lateinit var pixelGifName: String
+    @Ignore
+    lateinit var monsterType: MonsterType
+    @Ignore
+    var evolveSeconds: Int = 0
+}
 
+@Parcelize
 @Entity(
     tableName = "evolution",
     foreignKeys = [
@@ -124,4 +97,4 @@ data class Evolution(
     val morningEvolutionId: Int?,
     val balanceEvolutionId: Int?,
     val nightEvolutionId: Int?
-)
+): Parcelable

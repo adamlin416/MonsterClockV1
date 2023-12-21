@@ -8,9 +8,9 @@
         android:id="@+id/simpleOverlayImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="420dp"
+        android:layout_marginTop="220dp"
         android:textSize="25dp"
         android:textAlignment="center"
         android:background="@android:color/white"
-        android:text="Click here to add your monster egg."/>
+        android:text="Click here to apply this monster to monster clock widget."/>
 </FrameLayout>

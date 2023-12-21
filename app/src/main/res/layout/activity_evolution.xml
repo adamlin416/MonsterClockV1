@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/evolved_monster_intro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your monster has evolve to ..."
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center"
+            />
+        <ImageView
+            android:id="@+id/evolved_monster_gif"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="50dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/monster_nepenthes_focused"
+            />
+    </LinearLayout>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -11,8 +43,10 @@
     <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Select your next evolve environment."
-    android:layout_marginBottom="16dp"
+    android:text="Pls select a environment for it resident."
+    android:layout_marginTop="220dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
     android:textSize="20dp"
     android:background="@android:color/transparent" />
 
@@ -28,3 +62,4 @@
 
     </LinearLayout>
 </LinearLayout>
+</RelativeLayout>

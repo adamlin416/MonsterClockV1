@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a96604c8a66b4b3bbe9ba46a829bb8c7",
+    "identityHash": "2f72f76405c0c82700a7ad6a609da74c",
     "entities": [
       {
         "tableName": "monster",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`monsterId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `monsterName` TEXT NOT NULL, `monsterType` TEXT NOT NULL, `monsterLevel` INTEGER NOT NULL, `pixelGifName` TEXT NOT NULL, `pixelFocusedGifName` TEXT NOT NULL, `clockName` TEXT NOT NULL, `isDiscovered` INTEGER NOT NULL, `evolveSeconds` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`monsterId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `monsterName` TEXT NOT NULL, `monsterType` TEXT NOT NULL, `monsterLevel` INTEGER NOT NULL, `pixelGifName` TEXT NOT NULL, `pixelFocusedGifName` TEXT NOT NULL, `clockName` TEXT NOT NULL, `isDiscovered` INTEGER NOT NULL, `evolveSeconds` INTEGER NOT NULL, `story` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "monsterId",
@@ -60,6 +60,12 @@
             "fieldPath": "evolveSeconds",
             "columnName": "evolveSeconds",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "story",
+            "columnName": "story",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -268,7 +274,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a96604c8a66b4b3bbe9ba46a829bb8c7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2f72f76405c0c82700a7ad6a609da74c')"
     ]
   }
 }

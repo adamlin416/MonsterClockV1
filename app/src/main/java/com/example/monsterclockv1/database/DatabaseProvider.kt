@@ -24,6 +24,7 @@ class MonsterTreeProvider(private val context: Context) {
         val pixelFocusedGifName: String,
         val clockName: String,
         val evolveSeconds: Int,
+        val story: String,
         val evolutions: List<MonsterTree>?
     )
 
@@ -48,57 +49,14 @@ class MonsterTreeProvider(private val context: Context) {
 object DatabaseProvider {
     @Volatile
     private var instance: AppDatabase? = null
-
-    // Migration from 1 to 2, add evolution table
-    //private val MIGRATION_1_2 = object : Migration(1, 2) {
-    //    override fun migrate(database: SupportSQLiteDatabase) {
-    //        database.execSQL(
-    //            """
-    //                CREATE TABLE evolution (
-    //                    evolutionId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    //                    monsterId INTEGER NOT NULL,
-    //                    morningEvolutionId INTEGER,
-    //                    balanceEvolutionId INTEGER,
-    //                    nightEvolutionId INTEGER,
-    //                    FOREIGN KEY(monsterId) REFERENCES monster(monsterId) ON DELETE CASCADE,
-    //                    FOREIGN KEY(morningEvolutionId) REFERENCES monster(monsterId) ON DELETE SET NULL,
-    //                    FOREIGN KEY(balanceEvolutionId) REFERENCES monster(monsterId) ON DELETE SET NULL,
-    //                    FOREIGN KEY(nightEvolutionId) REFERENCES monster(monsterId) ON DELETE SET NULL,
-    //                )
-    //            """.trimIndent()
-    //        )
-    //        database.execSQL("CREATE INDEX IF NOT EXISTS index_evolution_monsterId ON evolution (monsterId)")
-    //        database.execSQL("CREATE INDEX IF NOT EXISTS index_evolution_morningEvolutionId ON evolution (morningEvolutionId)")
-    //        database.execSQL("CREATE INDEX IF NOT EXISTS index_evolution_balanceEvolutionId ON evolution (balanceEvolutionId)")
-    //        database.execSQL("CREATE INDEX IF NOT EXISTS index_evolution_nightEvolutionId ON evolution (nightEvolutionId)")
-    //    }
-    //}
-    //
-    //private val MIGRATION_2_3 = object : Migration(2, 3) {
-    //    override fun migrate(database: SupportSQLiteDatabase) {
-    //        // add column monsterLevel to monster table
-    //        database.execSQL("ALTER TABLE monster ADD COLUMN monsterLevel INTEGER")
-    //        // add column pixelFocusedGifName to monster table
-    //        database.execSQL("ALTER TABLE monster ADD COLUMN pixelFocusedGifName TEXT")
-    //        // add column clockName to monster table
-    //        database.execSQL("ALTER TABLE monster ADD COLUMN monsterType TEXT")
-    //        //database.execSQL("ALTER TABLE monster ADD COLUMN clockName TEXT NOT NULL DEFAULT 'clock_morning_egg'")
-    //        // evolveSeconds=Column{name='evolveSeconds', type='INTEGER', affinity='3', notNull=true, primaryKeyPosition=0, defaultValue='undefined'},
-    //        database.execSQL("ALTER TABLE monster ADD COLUMN evolveSeconds INTEGER NOT NULL DEFAULT undefined")
-    //        database.execSQL("ALTER TABLE monster ADD COLUMN isDiscovered INTEGER NOT NULL DEFAULT 0")
-    //        database.execSQL("ALTER TABLE monster_serving ADD COLUMN position INTEGER NOT NULL DEFAULT 0")
-    //        database.execSQL("ALTER TABLE monster_serving ADD COLUMN environment TEXT NOT NULL DEFAULT undefined")
-    //
-    //
-    //    }
-    //}
+    private val dbName: String = "monster_clock_database_redo6"
 
     fun getDatabase(context: Context): AppDatabase {
         return instance ?: synchronized(this) {
             val instance = Room.databaseBuilder(
                 context.applicationContext,
                 AppDatabase::class.java,
-                "monster_clock_database_redo4"
+                dbName
             ).addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
@@ -139,7 +97,8 @@ object DatabaseProvider {
                             pixelGifName = currentMonster.pixelGifName,
                             pixelFocusedGifName = currentMonster.pixelFocusedGifName,
                             clockName = currentMonster.clockName,
-                            evolveSeconds = currentMonster.evolveSeconds
+                            evolveSeconds = currentMonster.evolveSeconds,
+                            story = currentMonster.story
                         )
                     )
                 )
@@ -184,7 +143,7 @@ object DatabaseProvider {
 
     fun clearDatabase(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
-            context.deleteDatabase("monster_clock_database_redo4")
+            context.deleteDatabase(dbName)
         }
     }
 }

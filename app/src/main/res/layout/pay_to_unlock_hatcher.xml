@@ -1,0 +1,64 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="8dp"
+    android:background="#D3D6E3">
+    
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:src="@drawable/unknown_egg"
+        android:scaleType="centerInside"
+        android:id="@+id/unknownEggImageView"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Free users only have access to 1 hatcher.\n\n
+You can choose to watch an ad to unlock a hatcher each time you add a new egg.\n\n
+Alternatively, you may support the developer by opting support for ad-free experience. This is the only payment required in this app."
+        android:textSize="22dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/cancelPayToUnlockButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Thanks"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:padding="4dp"
+            android:layout_weight="1"
+            />
+        <Button
+            android:id="@+id/watchAdButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Watch Ad"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:padding="4dp"
+            android:layout_weight="1"
+            />
+        <Button
+            android:id="@+id/payToUnlockButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Support"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:padding="4dp"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+</LinearLayout>

@@ -7,7 +7,8 @@
     "pixelGifName": "monster_morning_egg",
     "pixelFocusedGifName": "monster_morning_egg_focused",
     "clockName": "monster_morning_egg_clock",
-    "evolveSeconds": 3,
+    "evolveSeconds": 10,
+    "story": "TBD",
     "evolutions": [
       {
         "monsterId": 4,
@@ -17,7 +18,8 @@
         "pixelGifName": "monster_seedy",
         "pixelFocusedGifName": "monster_seedy_focused",
         "clockName": "monster_seedy_clock",
-        "evolveSeconds": 3,
+        "evolveSeconds": 60,
+        "story": "TBD",
         "evolutions": [
           {
             "monsterId": 7,
@@ -28,6 +30,7 @@
             "pixelFocusedGifName": "monster_bud_focused",
             "clockName": "monster_bud_clock",
             "evolveSeconds": 259200,
+            "story": "TBD",
             "evolutions": null
           },
           {
@@ -39,6 +42,7 @@
             "pixelFocusedGifName": "monster_nepenthes_focused",
             "clockName": "monster_nepenthes_clock",
             "evolveSeconds": 259200,
+            "story": "TBD",
             "evolutions": null
           },
           {
@@ -50,6 +54,7 @@
             "pixelFocusedGifName": "monster_dandelion_focused",
             "clockName": "monster_dandelion_clock",
             "evolveSeconds": 259200,
+            "story": "TBD",
             "evolutions": null
           }
         ]
@@ -64,7 +69,8 @@
     "pixelGifName": "monster_balance_egg",
     "pixelFocusedGifName": "monster_balance_egg_focused",
     "clockName": "monster_balance_egg_clock",
-    "evolveSeconds": 60,
+    "evolveSeconds": 10,
+    "story": "TBD",
     "evolutions": [
       {
         "monsterId": 5,
@@ -74,7 +80,8 @@
         "pixelGifName": "monster_walky",
         "pixelFocusedGifName": "monster_walky_focused",
         "clockName": "monster_walky_clock",
-        "evolveSeconds": 86400,
+        "evolveSeconds": 60,
+        "story": "TBD",
         "evolutions": [
           {
             "monsterId": 10,
@@ -85,6 +92,7 @@
             "pixelFocusedGifName": "monster_weasel_horse_focused",
             "clockName": "monster_weasel_horse_clock",
             "evolveSeconds": 259200,
+            "story": "TBD",
             "evolutions": null
           },
           {
@@ -96,6 +104,7 @@
             "pixelFocusedGifName": "monster_danotyrannus_focused",
             "clockName": "monster_danotyrannus_clock",
             "evolveSeconds": 259200,
+            "story": "TBD",
             "evolutions": null
           },
           {
@@ -107,67 +116,73 @@
             "pixelFocusedGifName": "monster_squirrel_deer_focused",
             "clockName": "monster_squirrel_deer_clock",
             "evolveSeconds": 259200,
+            "story": "TBD",
             "evolutions": null
           }
         ]
       }
     ]
   },
-    {
-        "monsterId": 3,
-        "monsterName": "Night Egg",
+  {
+    "monsterId": 3,
+    "monsterName": "Night Egg",
+    "monsterType": "night",
+    "monsterLevel": 0,
+    "pixelGifName": "monster_night_egg",
+    "pixelFocusedGifName": "monster_night_egg_focused",
+    "clockName": "monster_night_egg_clock",
+    "evolveSeconds": 10,
+    "story": "TBD",
+    "evolutions": [
+      {
+        "monsterId": 6,
+        "monsterName": "Lighty",
         "monsterType": "night",
-        "monsterLevel": 0,
-        "pixelGifName": "monster_night_egg",
-        "pixelFocusedGifName": "monster_night_egg_focused",
-        "clockName": "monster_night_egg_clock",
+        "monsterLevel": 1,
+        "pixelGifName": "monster_lighty",
+        "pixelFocusedGifName": "monster_lighty_focused",
+        "clockName": "monster_lighty_clock",
         "evolveSeconds": 60,
+        "story": "TBD",
         "evolutions": [
-        {
-            "monsterId": 6,
-            "monsterName": "Lighty",
+          {
+            "monsterId": 13,
+            "monsterName": "Electric Seed",
             "monsterType": "night",
-            "monsterLevel": 1,
-            "pixelGifName": "monster_lighty",
-            "pixelFocusedGifName": "monster_lighty_focused",
-            "clockName": "monster_lighty_clock",
-            "evolveSeconds": 86400,
-            "evolutions": [
-            {
-                "monsterId": 13,
-                "monsterName": "Electric Seed",
-                "monsterType": "night",
-                "monsterLevel": 2,
-                "pixelGifName": "monster_electric_seed",
-                "pixelFocusedGifName": "monster_electric_seed_focused",
-                "clockName": "monster_electric_seed_clock",
-                "evolveSeconds": 259200,
-                "evolutions": null
-            },
-            {
-                "monsterId": 14,
-                "monsterName": "Floaty",
-                "monsterType": "night",
-                "monsterLevel": 2,
-                "pixelGifName": "monster_floaty",
-                "pixelFocusedGifName": "monster_floaty_focused",
-                "clockName": "monster_floaty_clock",
-                "evolveSeconds": 259200,
-                "evolutions": null
-            },
-            {
-                "monsterId": 15,
-                "monsterName": "Moonlight",
-                "monsterType": "night",
-                "monsterLevel": 2,
-                "pixelGifName": "monster_moonlight",
-                "pixelFocusedGifName": "monster_moonlight_focused",
-                "clockName": "monster_moonlight_clock",
-                "evolveSeconds": 259200,
-                "evolutions": null
-            }
-            ]
-        }
+            "monsterLevel": 2,
+            "pixelGifName": "monster_electric_seed",
+            "pixelFocusedGifName": "monster_electric_seed_focused",
+            "clockName": "monster_electric_seed_clock",
+            "evolveSeconds": 259200,
+            "story": "TBD",
+            "evolutions": null
+          },
+          {
+            "monsterId": 14,
+            "monsterName": "Floaty",
+            "monsterType": "night",
+            "monsterLevel": 2,
+            "pixelGifName": "monster_floaty",
+            "pixelFocusedGifName": "monster_floaty_focused",
+            "clockName": "monster_floaty_clock",
+            "evolveSeconds": 259200,
+            "story": "TBD",
+            "evolutions": null
+          },
+          {
+            "monsterId": 15,
+            "monsterName": "Moonlight",
+            "monsterType": "night",
+            "monsterLevel": 2,
+            "pixelGifName": "monster_moonlight",
+            "pixelFocusedGifName": "monster_moonlight_focused",
+            "clockName": "monster_moonlight_clock",
+            "evolveSeconds": 259200,
+            "story": "TBD",
+            "evolutions": null
+          }
         ]
-    }
+      }
+    ]
+  }
 ]

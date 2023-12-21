@@ -31,6 +31,9 @@ interface MonsterServingDao {
     @Insert
     fun insertMonsterServing(monsterServing: MonsterServing)
 
+    @Insert
+    fun insertMonsterServings(monsterServings: List<MonsterServing>)
+
     @Query("SELECT * FROM monster_serving WHERE monsterId = :monsterId")
     fun getMonsterServingByMonsterId(monsterId: Int): MonsterServing
 

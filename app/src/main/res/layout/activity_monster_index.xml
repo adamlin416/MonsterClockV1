@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@drawable/border_style"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:text="Index"
+        android:gravity="center"
+        android:id="@+id/indexTextView"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/monsterIndexRecyclerView"
+        android:layout_below="@+id/indexTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical"/>
+</RelativeLayout>

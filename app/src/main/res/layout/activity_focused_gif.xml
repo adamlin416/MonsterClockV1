@@ -1,20 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
 
     <ImageView
         android:id="@+id/focusedGifImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_marginTop="20dp"
+        android:padding="5dp"
+        android:background="@drawable/border_style"/>
+    <TextView
+        android:id="@+id/focusedTypeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/focusedGifImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="Monster type"
+        android:textSize="20dp" />
+    <ImageView
+        android:id="@+id/focusedTypeImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/type_morning_gif"/>
+    <TextView
+        android:id="@+id/focusedGifImageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/focusedGifImageView"
+        android:layout_centerHorizontal="true"
+        android:text="Monster short story\n 123\n 123"
+        android:textSize="20sp" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
     <Button
         android:id="@+id/focusedGifImageBackButton"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_weight="1"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="15dp"
         android:text="返回" />
 
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/focusedGifSetClockButton"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_weight="1"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="60dp"
+        android:src="@drawable/action_apply_clock" />
+    </LinearLayout>
+
+</LinearLayout>
