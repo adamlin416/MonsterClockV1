@@ -1,5 +1,5 @@
 This is a almost done Android App... a hobby project in my gap year.
-But google requests for real user's feedback and test in early release(like >20 users), and I also got a job so it just stopped there.  
+But google requests for real user's feedback and test in close test release(like >20 users), and I also got a job so it just stopped there.  
 Mainly a 8-bit monster evolve game. Unlock new evolution also unlock new clock widget.  
 
 Here're some monsters:
