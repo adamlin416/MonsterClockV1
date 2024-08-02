@@ -11,9 +11,9 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/icons8_number_48"
-        android:layout_marginStart="-18dp"
-        android:layout_marginEnd="-18dp"
+        android:src="@drawable/monster_morning_egg_clock_7"
+        android:layout_marginStart="-0dp"
+        android:layout_marginEnd="-0dp"
         />
 
     <ImageView
@@ -21,19 +21,19 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/icons8_number_48"
-        android:layout_marginStart="-18dp"
-        android:layout_marginEnd="-18dp"
+        android:src="@drawable/monster_morning_egg_clock_7"
+        android:layout_marginStart="-0dp"
+        android:layout_marginEnd="-0dp"
         />
 
     <ImageView
         android:id="@+id/colon"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.7"
-        android:src="@drawable/icons8_colon_100"
-        android:layout_marginStart="-18dp"
-        android:layout_marginEnd="-18dp"
+        android:layout_weight=".9"
+        android:src="@drawable/monster_morning_egg_clock_colon"
+        android:layout_marginStart="-0dp"
+        android:layout_marginEnd="-0dp"
         />
 
     <ImageView
@@ -41,9 +41,9 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/icons8_number_48"
-        android:layout_marginStart="-18dp"
-        android:layout_marginEnd="-18dp"
+        android:src="@drawable/monster_morning_egg_clock_7"
+        android:layout_marginStart="-0dp"
+        android:layout_marginEnd="-0dp"
         />
 
     <ImageView
@@ -51,8 +51,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/icons8_number_48"
-        android:layout_marginStart="-18dp"
-        android:layout_marginEnd="-18dp"
+        android:src="@drawable/monster_morning_egg_clock_7"
+        android:layout_marginStart="-0dp"
+        android:layout_marginEnd="-0dp"
         />
 </LinearLayout>

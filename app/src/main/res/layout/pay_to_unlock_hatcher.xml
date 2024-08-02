@@ -17,8 +17,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Free users only have access to 1 hatcher.\n\n
-You can choose to watch an ad to unlock a hatcher each time you add a new egg.\n\n
+        android:text="Free users only have access to 1 incubator.\n\n
+You can choose to watch an ad to unlock a incubator each time you add a new egg.\n\n
 Alternatively, you may support the developer by opting support for ad-free experience. This is the only payment required in this app."
         android:textSize="22dp"
         android:layout_marginBottom="30dp"

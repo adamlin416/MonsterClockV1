@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.monsterclockv1"
+    namespace = "com.greensilver.monsterclock"
     compileSdk = 34
 
     signingConfigs {
@@ -19,10 +19,10 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.monsterclockv1"
+        applicationId = "com.greensilver.monsterclock"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
+        versionCode = 12
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -34,8 +34,9 @@ android {
     }
 
     buildTypes {
-        release {
-            isMinifyEnabled = false
+        getByName("release") {
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -81,4 +82,10 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation ("androidx.activity:activity-ktx:1.4.0")
+    // admob
+    implementation("com.google.android.gms:play-services-ads:22.6.0")
+    // billing
+    implementation("com.android.billingclient:billing:6.1.0")
+    // encryption
+    implementation("androidx.security:security-crypto:1.1.0-alpha03")
 }

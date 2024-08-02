@@ -1,0 +1,33 @@
+<resources>
+    <!--  AdMob test  -->
+    <string name="admob_app_id">ca-app-pub-2829005371251833~7389513193</string>
+    <string name="admob_banner_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="admob_rewarded_id">ca-app-pub-3940256099942544/5224354917</string>
+
+    <!--  Google Play test  -->
+    <string name="sku_skip_ad">android.test.purchased</string>
+
+    <!-- Zec Zec user -->
+    <string name="zec_zec_user_code">4ZEC</string>
+    <string name="app_name">MonsterClock</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+
+    <!--  Shared Pref  -->
+    <string name="shared_pref_name">MonsterClockPref</string>
+    <string name="shared_pref_check_first_init">IsFirstTimeLaunch</string>
+    <string name="shared_pref_check_skip_ad">IsSkipAd</string>
+    <string name="shared_pref_zec">IsZecUser</string>
+
+    <!--Showing hints-->
+    <string name="apply_widget_button">Apply Monster Clock</string>
+    <string name="adapt_new_egg">Adapt new egg</string>
+
+    <!--Monster full name-->
+    <string name="morning_egg_name">Morning Egg</string>
+    <string name="balance_egg_name">Balance Egg</string>
+    <string name="night_egg_name">Night Egg</string>
+    <string name="seedy">Seedy</string>
+    <string name="nepenthes">Nepenthes</string>
+</resources>

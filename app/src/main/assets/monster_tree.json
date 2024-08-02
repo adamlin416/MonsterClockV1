@@ -18,7 +18,7 @@
         "pixelGifName": "monster_seedy",
         "pixelFocusedGifName": "monster_seedy_focused",
         "clockName": "monster_seedy_clock",
-        "evolveSeconds": 60,
+        "evolveSeconds": 86400,
         "story": "TBD",
         "evolutions": [
           {
@@ -80,7 +80,7 @@
         "pixelGifName": "monster_walky",
         "pixelFocusedGifName": "monster_walky_focused",
         "clockName": "monster_walky_clock",
-        "evolveSeconds": 60,
+        "evolveSeconds": 86400,
         "story": "TBD",
         "evolutions": [
           {
@@ -142,7 +142,7 @@
         "pixelGifName": "monster_lighty",
         "pixelFocusedGifName": "monster_lighty_focused",
         "clockName": "monster_lighty_clock",
-        "evolveSeconds": 60,
+        "evolveSeconds": 86400,
         "story": "TBD",
         "evolutions": [
           {

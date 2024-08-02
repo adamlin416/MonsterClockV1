@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="5dp"
+    android:background="@drawable/border_style"
+    android:layout_margin="5dp">
+
+
+    <ImageView
+        android:id="@+id/gifImageView"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:src="@drawable/monster_morning_egg"
+        android:background="@drawable/border_style_sharp_edge"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/monsterClockLinearLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="2"/>
+
+    <LinearLayout
+        android:id="@+id/monsterClockLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:background="@drawable/border_style_sharp_edge"
+        app:layout_constraintStart_toEndOf="@+id/gifImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+    <ImageView
+        android:id="@+id/actionApplyClockButton"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:src="@drawable/action_apply_clock_selector"
+        android:background="@drawable/border_style_edge" />
+
+    <ImageView
+        android:id="@+id/actionDismissMonsterButton"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:src="@drawable/action_restart_to_egg_selector"
+        android:background="@drawable/border_style_edge" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/showTypeImageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/border_style"
+        android:padding="5dp"
+        android:src="@drawable/type_morning_gif"
+        app:layout_constraintStart_toStartOf="@+id/gifImageView"
+        app:layout_constraintTop_toTopOf="@+id/gifImageView"/>
+
+    <TextView
+        android:id="@+id/countdownTimerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font_regular_pixel_numbers"
+        android:text="00:00:00"
+        android:textSize="28dp"
+        app:layout_constraintStart_toEndOf="@+id/showTypeImageView"
+        app:layout_constraintTop_toTopOf="@+id/showTypeImageView"
+        app:layout_constraintBottom_toBottomOf="@+id/showTypeImageView"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
